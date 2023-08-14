@@ -1,0 +1,16 @@
+App(
+    appid="micropython",
+    name="Micropython",
+    apptype=FlipperAppType.EXTERNAL,
+    entry_point="micropython_app",
+    stack_size=4 * 1024,
+    requires=["gui"],
+    fap_private_libs=[
+        Lib(
+            name="micropython_embed",
+            sources=["./*/*.c", "./*/*/*.c"],
+            cflags=["-Wall", "-Og", "-Wno-unused-parameter", "-Wno-redundant-decls"],
+            cincludes=["./lib/micropython_embed/port"],
+        ),
+    ],
+)
