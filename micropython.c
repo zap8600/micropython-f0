@@ -1,9 +1,12 @@
 #include "port/micropython_embed.h"
 #include "micropython.h"
 
+#define TAG "micropython"
+
 // static const char *example_1 = "print('hello world!', list(x + 1 for x in range(10)), end='eol\\n')";
 
 static char heap[8 * 1024];
+static uint8_t mpyBuf[1 * 1024];
 
 int32_t micropython_app() {
   MpApp* app = malloc(sizeof(MpApp));
@@ -18,11 +21,15 @@ int32_t micropython_app() {
   view_dispatcher_switch_to_view(app->view_dispatcher, mpViewTextBox);
 
   app->storage = furi_record_open(RECORD_STORAGE);
-  if(!storage_file_open(app->file, APP_DATA_PATH("/ext/hello.mpy"), FSAM_READ, FSOM_CREATE_ALWAYS)) {
-    FURI_LOG_E(TAG, "Failed to open file");
+  app->stream = file_stream_alloc(app->storage);
+  if(file_stream_open(app->stream, APP_ASSETS_PATH("hello.mpy"), FSAM_READ, FSOM_OPEN_EXISTING)) {
+    stream_read(app->stream, mpyBuf, sizeof(mpyBuf));
+  } else {
+    FURI_LOG_E(TAG, "Failed to open file!");
   }
 
   mp_embed_init(&heap[0], sizeof(heap));
+  mp_embed_exec_mpy(mpyBuf, sizeof(mpyBuf));
   mp_embed_deinit();
 
   furi_assert(app);
@@ -31,8 +38,8 @@ int32_t micropython_app() {
   view_dispatcher_free(app->view_dispatcher);
   furi_record_close(RECORD_GUI);
   app->gui = NULL;
-  storage_file_close(app->file);
-  storage_file_free(app->file);
+  file_stream_close(app->stream);
+  stream_free(app->stream);
   furi_record_close(RECORD_STORAGE);
   app->storage = NULL;
   free(app);

@@ -5,12 +5,13 @@ App(
     entry_point="micropython_app",
     stack_size=4 * 1024,
     requires=["gui"],
+    fap_file_assets="files",
     fap_private_libs=[
         Lib(
             name="micropython_embed",
             sources=["./*/*.c", "./*/*/*.c"],
-            cflags=["-Wall", "-Og", "-Wno-unused-parameter", "-Wno-redundant-decls", "-Wno-implicit-function-declaration"],
-            cincludes=["./lib/micropython_embed/port"],
+            cflags=["-Wall", "-Og", "-Wno-unused-parameter", "-Wno-redundant-decls"],
+            cincludes=["."],
         ),
     ],
 )

@@ -5,6 +5,8 @@
 #include <gui/view_dispatcher.h>
 #include <gui/modules/text_box.h>
 #include <storage/storage.h>
+#include <toolbox/stream/stream.h>
+#include <toolbox/stream/file_stream.h>
 #include <stdlib.h>
 
 typedef struct {
@@ -12,7 +14,7 @@ typedef struct {
   ViewDispatcher* view_dispatcher;
   TextBox* text_box;
   Storage* storage;
-  File* file;
+  Stream* stream;
 } MpApp;
 
 typedef enum {
