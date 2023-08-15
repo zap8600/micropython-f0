@@ -36,3 +36,5 @@ typedef long mp_off_t;
 #include <alloca.h>
 
 #define MICROPY_MPHALPORT_H "port/mphalport.h"
+
+#define MP_STATE_PORT MP_STATE_VM

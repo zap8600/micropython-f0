@@ -9,7 +9,7 @@ App(
         Lib(
             name="micropython_embed",
             sources=["./*/*.c", "./*/*/*.c"],
-            cflags=["-Wall", "-Og", "-Wno-unused-parameter", "-Wno-redundant-decls"],
+            cflags=["-Wall", "-Og", "-Wno-unused-parameter", "-Wno-redundant-decls", "-Wno-implicit-function-declaration"],
             cincludes=["./lib/micropython_embed/port"],
         ),
     ],

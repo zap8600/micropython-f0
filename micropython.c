@@ -1,7 +1,7 @@
 #include "port/micropython_embed.h"
 #include "micropython.h"
 
-static const char *example_1 = "print('hello world!', list(x + 1 for x in range(10)), end='eol\\n')";
+// static const char *example_1 = "print('hello world!', list(x + 1 for x in range(10)), end='eol\\n')";
 
 static char heap[8 * 1024];
 
@@ -17,8 +17,12 @@ int32_t micropython_app() {
   view_dispatcher_attach_to_gui(app->view_dispatcher, app->gui, ViewDispatcherTypeFullscreen);
   view_dispatcher_switch_to_view(app->view_dispatcher, mpViewTextBox);
 
+  app->storage = furi_record_open(RECORD_STORAGE);
+  if(!storage_file_open(app->file, APP_DATA_PATH("/ext/hello.mpy"), FSAM_READ, FSOM_CREATE_ALWAYS)) {
+    FURI_LOG_E(TAG, "Failed to open file");
+  }
+
   mp_embed_init(&heap[0], sizeof(heap));
-  mp_embed_exec_str(example_1);
   mp_embed_deinit();
 
   furi_assert(app);
@@ -27,6 +31,10 @@ int32_t micropython_app() {
   view_dispatcher_free(app->view_dispatcher);
   furi_record_close(RECORD_GUI);
   app->gui = NULL;
+  storage_file_close(app->file);
+  storage_file_free(app->file);
+  furi_record_close(RECORD_STORAGE);
+  app->storage = NULL;
   free(app);
   return 0;
 }
