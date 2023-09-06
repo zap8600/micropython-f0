@@ -1,6 +1,7 @@
 #include "port/micropython_embed.h"
 #include "micropython.h"
 
+#define MICROPYTHON_APP_PATH_FOLDER STORAGE_APP_DATA_PATH_PREFIX
 #define TAG "micropython"
 
 // static const char *example_1 = "print('hello world!', list(x + 1 for x in range(10)), end='eol\\n')";
@@ -22,7 +23,7 @@ int32_t micropython_app() {
 
   app->storage = furi_record_open(RECORD_STORAGE);
   app->stream = file_stream_alloc(app->storage);
-  if(file_stream_open(app->stream, APP_ASSETS_PATH("hello.mpy"), FSAM_READ, FSOM_OPEN_EXISTING)) {
+  if(file_stream_open(app->stream, APP_DATA_PATH("hello.mpy"), FSAM_READ, FSOM_OPEN_EXISTING)) {
     stream_read(app->stream, mpyBuf, sizeof(mpyBuf));
   } else {
     FURI_LOG_E(TAG, "Failed to open file!");

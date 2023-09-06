@@ -14,4 +14,6 @@ App(
             cincludes=["."],
         ),
     ],
+    fap_icon="micropy.png",
+    fap_category="Tools",
 )
